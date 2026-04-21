@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>تکسیر جفر، استخراج و اعداد</title>
+  <title>تکسیر جفر، استخراج و نقش</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -79,6 +79,25 @@
       box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.2);
     }
 
+    .select-box {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: clamp(14px, 4vw, 18px);
+      background: #fafafa;
+      direction: rtl;
+      outline: none;
+      color: var(--text-main);
+    }
+
+    .select-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.2);
+    }
+
     .btn-group {
       display: flex;
       gap: 10px;
@@ -117,6 +136,7 @@
     .abjad-card { border-top: 4px solid var(--purple); background: var(--purple-light); }
     .extract-card { border-top: 4px solid var(--primary); background: var(--blue-light); }
     .muwakkil-card { border-top: 4px solid var(--green); background: var(--green-light); }
+    .naqsh-card { border-top: 4px solid #e65100; background: #fff3e0; } 
 
     .card-title {
       font-size: 16px;
@@ -129,8 +149,9 @@
     .title-purple { color: var(--purple); }
     .title-blue { color: var(--primary-dark); }
     .title-green { color: var(--green); }
+    .title-orange { color: #e65100; }
 
-    /* Stats Grid inside Abjad Card */
+    /* Stats Grid */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
@@ -192,10 +213,34 @@
       border: 1px solid rgba(46, 125, 50, 0.2);
     }
 
+    /* Naqsh Table Styling */
+    .naqsh-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #fff;
+      direction: ltr;
+    }
+
+    .naqsh-table td {
+      border: 1px solid #ffb74d;
+      text-align: center;
+      padding: 8px;
+      font-size: clamp(16px, 4vw, 20px);
+      font-family: "Courier New", monospace;
+      font-weight: bold;
+      color: #424242;
+    }
+
+    .naqsh-table .sum {
+      background: #ffe0b2;
+      color: #e65100;
+    }
+
     /* Takseer Scrollable Area */
     .takseer-wrapper {
       width: 100%;
-      overflow-x: auto; /* Horizontal Scroll for mobile */
+      overflow-x: auto; 
       padding-bottom: 10px;
       margin-top: 20px;
       direction: rtl;
@@ -219,7 +264,7 @@
       justify-content: center;
       gap: 6px;
       box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      white-space: nowrap; /* Prevent letter wrapping */
+      white-space: nowrap; 
     }
 
     .line span {
@@ -238,10 +283,26 @@
 <body>
   
   <div class="container">
-    <h1>تکسیر جفر و استخراج</h1>
+    <h1>تکسیر جفر، استخراج و نقش</h1>
     
     <div class="input-group">
       <textarea id="name" placeholder="عبارت یہاں درج کریں..."></textarea>
+      
+      <select id="naqshType" class="select-box">
+        <optgroup label="نقشِ مربع (4x4)">
+          <option value="murabba_aatshi">مربع آتشی (Aatshi)</option>
+          <option value="murabba_baadi">مربع بادی (Baadi)</option>
+          <option value="murabba_aabi">مربع آبی (Aabi)</option>
+          <option value="murabba_khaaki">مربع خاکی (Khaaki)</option>
+        </optgroup>
+        <optgroup label="نقشِ مثلث (3x3)">
+          <option value="musallas_aatshi">مثلث آتشی (Aatshi)</option>
+          <option value="musallas_baadi">مثلث بادی (Baadi)</option>
+          <option value="musallas_aabi">مثلث آبی (Aabi)</option>
+          <option value="musallas_khaaki">مثلث خاکی (Khaaki)</option>
+        </optgroup>
+      </select>
+
       <div class="btn-group">
         <button id="generate">نتیجہ دکھائیں</button>
         <button id="clear">صاف کریں</button>
@@ -256,40 +317,128 @@
   </div>
 
   <script>
+    // ابجد میپ
     const abjadMap = {
         'ا':1,'أ':1,'إ':1,'آ':1,'ء':1,'ٱ':1,'ٰ':1,
-        'ب':2,'پ':2, 
-        'ج':3,'چ':3, 
-        'د':4,'ڈ':4,
+        'ب':2,'پ':2, 'ج':3,'چ':3, 'د':4,'ڈ':4,
         'ه':5,'ہ':5,'ۃ':5,'ة':5,'ھ':5,'ہٰ':5, 
-        'و':6,'ؤ':6,
-        'ز':7,'ژ':7, 
-        'ح':8, 
-        'ط':9,
+        'و':6,'ؤ':6, 'ز':7,'ژ':7, 'ح':8, 'ط':9,
         'ی':10,'ي':10,'ئ':10,'ے':10,'ى':10, 
-        'ک':20,'ك':20,'گ':20, 
-        'ل':30, 
-        'م':40,
-        'ن':50,'ں':50, 
-        'س':60, 
-        'ع':70, 
-        'ف':80, 
-        'ص':90,
-        'ق':100, 
-        'ر':200,'ڑ':200, 
-        'ش':300,
-        'ت':400,'ٹ':400, 
-        'ث':500, 
-        'خ':600, 
-        'ذ':700,
-        'ض':800, 
-        'ظ':900, 
-        'غ':1000,
-        'ﷲ': 66,
+        'ک':20,'ك':20,'گ':20, 'ل':30, 'م':40,
+        'ن':50,'ں':50, 'س':60, 'ع':70, 'ف':80, 'ص':90,
+        'ق':100, 'ر':200,'ڑ':200, 'ش':300,
+        'ت':400,'ٹ':400, 'ث':500, 'خ':600, 'ذ':700,
+        'ض':800, 'ظ':900, 'غ':1000, 'ﷲ': 66,
         ' ':0, '\n':0, '\t':0, '۔':0, '،':0, '؛':0, '؟':0, '-':0, '(':0, ')':0, '[':0, ']':0, '.':0, ':':0, '!':0,
         '\u064B':0,'\u064C':0,'\u064D':0,'\u064E':0,'\u064F':0,'\u0650':0,'\u0651':0,'\u0652':0,'\u0653':0,'\u0654':0,'\u0655':0,
         'ـ':0, '\u200C':0, '\u200D':0
     };
+
+    // مربع کے لے آؤٹس
+    const layouts_murabba = {
+      aatshi: [8,11,14,1, 13,2,7,12, 3,16,9,6, 10,5,4,15],
+      baadi:  [11,8,1,14, 2,13,12,7, 16,3,6,9, 5,10,15,4],
+      aabi:   [14,1,8,11, 7,12,13,2, 9,6,3,16, 4,15,10,5],
+      khaaki: [1,14,11,8, 12,7,2,13, 6,9,16,3, 15,4,5,10]
+    };
+
+    const smallLayouts_murabba = {
+      aatshi: [7,10,13,null, 12,1,6,11, 2,15,8,5, 9,4,3,14],
+      baadi:  [10,7,null,13, 1,12,11,6, 15,2,5,8, 4,9,14,3],
+      aabi:   [13,null,7,10, 6,11,12,1, 8,5,2,15, 3,14,9,4],
+      khaaki: [null,13,10,7, 11,6,1,12, 5,8,15,2, 14,3,4,9]
+    };
+
+    // مثلث کے لے آؤٹس
+    const layouts_musallas = {
+      aatshi: [8,1,6, 3,5,7, 4,9,2],
+      baadi:  [2,7,6, 9,5,1, 4,3,8],
+      aabi:   [6,7,2, 1,5,9, 8,3,4],
+      khaaki: [4,9,2, 3,5,7, 8,1,6]
+    };
+
+    // مربع بنانے کا فنکشن (4x4)
+    function buildMurabbaNaqsh(type, meezan){
+      let grid = Array(16).fill('');
+      if(meezan <= 33){
+        let layout = smallLayouts_murabba[type];
+        layout.forEach((val, idx)=>{
+          if(val!==null) grid[idx] = val;
+        });
+      } else {
+        let modified = meezan - 30;
+        let quotient = Math.floor(modified / 4);
+        let remainder = modified % 4;
+        let nums = [];
+        for(let i=0; i<16; i++) nums.push(quotient+i);
+        if(remainder > 0){
+          let startIndex = remainder===1 ? 12 : remainder===2 ? 8 : 4; 
+          for(let i=startIndex; i<16; i++) nums[i] += 1;
+        }
+        let layout = layouts_murabba[type];
+        layout.forEach((khana, idx)=>{
+          grid[idx] = nums[khana-1];
+        });
+      }
+      return grid;
+    }
+
+    // مثلث بنانے کا فنکشن (3x3)
+    function buildMusallasNaqsh(type, meezan){
+      let grid = Array(9).fill('');
+      let modified = meezan - 12;
+      let quotient = Math.floor(modified / 3);
+      let remainder = modified % 3;
+      
+      let nums = [];
+      for(let i=0; i<9; i++) nums.push(quotient + i);
+      
+      // اگر کسر 1 بچے تو خانہ 7 سے 9 تک ایک کا اضافہ
+      if(remainder === 1){
+        for(let i=6; i<9; i++) nums[i] += 1; 
+      }
+      // اگر کسر 2 بچے تو خانہ 4 سے 9 تک ایک کا اضافہ
+      else if(remainder === 2){
+        for(let i=3; i<9; i++) nums[i] += 1; 
+      }
+
+      let layout = layouts_musallas[type];
+      layout.forEach((khana, idx)=>{
+        grid[idx] = nums[khana-1];
+      });
+      return grid;
+    }
+
+    // نقش ڈرا کرنے کا ڈائنامک فنکشن (خود بخود 3x3 یا 4x4 ڈرا کرے گا)
+    function renderNaqshCard(title, grid, meezanVal){
+      let n = Math.sqrt(grid.length); // اگر Array میں 9 ہیں تو 3، 16 ہیں تو 4
+      let rows = [];
+      for(let i=0; i<n; i++) rows.push(grid.slice(i*n, i*n + n));
+      
+      let rowSums = rows.map(r=>r.reduce((a,b)=>a+(+b||0),0));
+      let colSums = Array(n).fill(0);
+      for(let r=0; r<n; r++) for(let c=0; c<n; c++) colSums[c]+= (+rows[r][c]||0);
+
+      let html = `<div class="card naqsh-card">
+        <span class="card-title title-orange">نقش (${title}) - میزان: ${meezanVal}</span>
+        <table class="naqsh-table">`;
+      
+      for(let i=0; i<n; i++){
+        html+="<tr>";
+        for(let j=0; j<n; j++){
+          html+=`<td>${rows[i][j]||''}</td>`;
+        }
+        html+=`<td class="sum">${rowSums[i]}</td></tr>`;
+      }
+      
+      html+="<tr>";
+      for(let j=0; j<n; j++){
+        html+=`<td class="sum">${colSums[j]}</td>`;
+      }
+      html+=`<td class="sum" style="background:transparent; border:none;"></td></tr>`;
+      html+="</table></div>";
+      return html;
+    }
 
     function removeAiraab(str) {
       return str.replace(/[\u064B-\u065F\u0670\u0640\u200C\u200D]/g, "");
@@ -417,6 +566,25 @@
       let muwakkil1 = joinedChars + "ھیث";
       let muwakkil2 = joinedChars + "ائیل";
 
+      // --- نقش کی منطق ---
+      let naqshSelection = document.getElementById('naqshType');
+      let selectedValue = naqshSelection.value; 
+      let naqshTitle = naqshSelection.options[naqshSelection.selectedIndex].text;
+      
+      // پتہ لگانا کہ مربع ہے یا مثلث
+      let [sizeType, element] = selectedValue.split('_'); 
+      let naqshHtml = "";
+
+      if (meezan > 0) {
+        if (sizeType === 'murabba') {
+          let grid = buildMurabbaNaqsh(element, meezan);
+          naqshHtml = renderNaqshCard(naqshTitle, grid, meezan);
+        } else if (sizeType === 'musallas') {
+          let grid = buildMusallasNaqsh(element, meezan);
+          naqshHtml = renderNaqshCard(naqshTitle, grid, meezan);
+        }
+      }
+
       extractionDiv.innerHTML = `
         <div class="card abjad-card">
           <span class="card-title title-purple">اعداد و میزان</span>
@@ -435,8 +603,8 @@
             </div>
           </div>
         </div>
-        
-        <div class="card extract-card">
+
+        ${naqshHtml} <div class="card extract-card">
           <span class="card-title title-blue">تمام سطروں کے پہلے حروف</span>
           <div class="letters-display-small">${allFirstLetters.join(' ')}</div>
         </div>
