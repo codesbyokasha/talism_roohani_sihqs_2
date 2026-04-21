@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>تکسیر جفر، استخراج و اعداد</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f0f2f5;
+      --card-bg: #ffffff;
+      --primary: #0288d1;
+      --primary-dark: #01579b;
+      --purple: #8e24aa;
+      --purple-light: #f3e5f5;
+      --green: #2e7d32;
+      --green-light: #e8f5e9;
+      --blue-light: #e1f5fe;
+      --text-main: #333333;
+      --danger: #d32f2f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body { 
+      font-family: "Noto Nastaliq Urdu", "Noto Naskh Arabic", "Segoe UI", sans-serif; 
+      background-color: var(--bg-color); 
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px 10px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 { 
+      font-size: clamp(20px, 6vw, 28px); 
+      text-align: center;
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      text-shadow: 0px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    /* Input Section */
+    .input-group {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+    }
+
+    textarea { 
+      width: 100%; 
+      min-height: 80px; 
+      font-size: clamp(16px, 5vw, 22px); 
+      direction: rtl; 
+      padding: 12px; 
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      background: #fafafa;
+      font-family: inherit;
+      resize: vertical;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.2);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button { 
+      flex: 1;
+      padding: 14px 10px; 
+      font-size: clamp(14px, 4vw, 18px); 
+      font-weight: bold;
+      cursor: pointer; 
+      border: none; 
+      border-radius: 12px; 
+      color: #fff; 
+      font-family: inherit;
+      transition: transform 0.1s, background 0.3s;
+    }
+
+    #generate { background: var(--primary); }
+    #generate:active { background: var(--primary-dark); transform: scale(0.98); }
+    
+    #clear { background: #757575; }
+    #clear:active { background: #424242; transform: scale(0.98); }
+
+    /* Result Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+      width: 100%;
+    }
+
+    .abjad-card { border-top: 4px solid var(--purple); background: var(--purple-light); }
+    .extract-card { border-top: 4px solid var(--primary); background: var(--blue-light); }
+    .muwakkil-card { border-top: 4px solid var(--green); background: var(--green-light); }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+      text-align: center;
+    }
+
+    .title-purple { color: var(--purple); }
+    .title-blue { color: var(--primary-dark); }
+    .title-green { color: var(--green); }
+
+    /* Stats Grid inside Abjad Card */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 10px;
+      text-align: center;
+    }
+
+    .stat-box {
+      background: #fff;
+      padding: 10px 5px;
+      border-radius: 10px;
+      border: 1px solid rgba(142, 36, 170, 0.2);
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: #666;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      color: var(--purple);
+      font-weight: bold;
+      font-family: "Courier New", monospace;
+    }
+
+    /* Letters Display */
+    .letters-display {
+      font-size: clamp(20px, 6vw, 26px);
+      letter-spacing: 4px;
+      color: var(--danger);
+      font-weight: bold;
+      line-height: 1.6;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .letters-display-small {
+      font-size: clamp(18px, 5vw, 22px); 
+      letter-spacing: 2px;
+      color: var(--primary-dark);
+      font-weight: bold;
+      line-height: 1.6;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .muwakkil-name {
+      font-size: clamp(22px, 6vw, 26px);
+      color: var(--danger);
+      font-weight: bold;
+      text-align: center;
+      margin: 8px 0;
+      background: #fff;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(46, 125, 50, 0.2);
+    }
+
+    /* Takseer Scrollable Area */
+    .takseer-wrapper {
+      width: 100%;
+      overflow-x: auto; /* Horizontal Scroll for mobile */
+      padding-bottom: 10px;
+      margin-top: 20px;
+      direction: rtl;
+    }
+
+    .takseer-inner {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 100%;
+    }
+
+    .line {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 4px 0;
+      font-size: clamp(16px, 5vw, 22px);
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      white-space: nowrap; /* Prevent letter wrapping */
+    }
+
+    .line span {
+      display: inline-block;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .highlight {
+      color: var(--danger);
+      font-weight: bold;
+    }
+
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <h1>تکسیر جفر و استخراج</h1>
+    
+    <div class="input-group">
+      <textarea id="name" placeholder="عبارت یہاں درج کریں..."></textarea>
+      <div class="btn-group">
+        <button id="generate">نتیجہ دکھائیں</button>
+        <button id="clear">صاف کریں</button>
+      </div>
+    </div>
+
+    <div id="extractionResult"></div>
+    
+    <div class="takseer-wrapper" id="takseerWrapper" style="display:none;">
+      <div class="takseer-inner" id="output"></div>
+    </div>
+  </div>
+
+  <script>
+    const abjadMap = {
+        'ا':1,'أ':1,'إ':1,'آ':1,'ء':1,'ٱ':1,'ٰ':1,
+        'ب':2,'پ':2, 
+        'ج':3,'چ':3, 
+        'د':4,'ڈ':4,
+        'ه':5,'ہ':5,'ۃ':5,'ة':5,'ھ':5,'ہٰ':5, 
+        'و':6,'ؤ':6,
+        'ز':7,'ژ':7, 
+        'ح':8, 
+        'ط':9,
+        'ی':10,'ي':10,'ئ':10,'ے':10,'ى':10, 
+        'ک':20,'ك':20,'گ':20, 
+        'ل':30, 
+        'م':40,
+        'ن':50,'ں':50, 
+        'س':60, 
+        'ع':70, 
+        'ف':80, 
+        'ص':90,
+        'ق':100, 
+        'ر':200,'ڑ':200, 
+        'ش':300,
+        'ت':400,'ٹ':400, 
+        'ث':500, 
+        'خ':600, 
+        'ذ':700,
+        'ض':800, 
+        'ظ':900, 
+        'غ':1000,
+        'ﷲ': 66,
+        ' ':0, '\n':0, '\t':0, '۔':0, '،':0, '؛':0, '؟':0, '-':0, '(':0, ')':0, '[':0, ']':0, '.':0, ':':0, '!':0,
+        '\u064B':0,'\u064C':0,'\u064D':0,'\u064E':0,'\u064F':0,'\u0650':0,'\u0651':0,'\u0652':0,'\u0653':0,'\u0654':0,'\u0655':0,
+        'ـ':0, '\u200C':0, '\u200D':0
+    };
+
+    function removeAiraab(str) {
+      return str.replace(/[\u064B-\u065F\u0670\u0640\u200C\u200D]/g, "");
+    }
+
+    function splitChars(str){
+      return Array.from(str.replace(/\s+/g, ''));
+    }
+
+    function takseerMuakharSadar(chars){
+      const res = [];
+      let i=0, j=chars.length-1;
+      let takeFromEnd = true;
+      while(i<=j){
+        if(takeFromEnd){ res.push(chars[j]); j--; }
+        else { res.push(chars[i]); i++; }
+        takeFromEnd = !takeFromEnd;
+      }
+      return res;
+    }
+
+    document.getElementById('generate').onclick = () => {
+      let rawText = document.getElementById('name').value.trim();
+      const output = document.getElementById('output');
+      const extractionDiv = document.getElementById('extractionResult');
+      const takseerWrapper = document.getElementById('takseerWrapper');
+      
+      output.innerHTML = '';
+      extractionDiv.innerHTML = '';
+      takseerWrapper.style.display = 'none';
+
+      if(!rawText) return;
+
+      rawText = rawText.normalize('NFC');
+
+      let abjadSum = 0;
+      for (let char of rawText) {
+          if (abjadMap.hasOwnProperty(char)) {
+              abjadSum += abjadMap[char];
+          }
+      }
+
+      let text = removeAiraab(rawText);
+      const chars = splitChars(text);
+      
+      let allLines = [];
+      let current = chars;
+      allLines.push([...current]);
+      
+      while(true) {
+        current = takseerMuakharSadar(current);
+        allLines.push([...current]);
+        if(current.join('') === chars.join('')) break;
+      }
+
+      let totalLines = allLines.length; 
+      let lineLen = chars.length;
+      let meezan = abjadSum * totalLines;
+
+      let middleLineIndices = [];
+      if (totalLines % 2 !== 0) {
+        middleLineIndices.push(Math.floor(totalLines / 2));
+      } else {
+        middleLineIndices.push((totalLines / 2) - 1);
+        middleLineIndices.push(totalLines / 2);
+      }
+
+      let middleCharIndices = [];
+      if (lineLen % 2 !== 0) {
+        middleCharIndices.push(Math.floor(lineLen / 2));
+      } else {
+        middleCharIndices.push((lineLen / 2) - 1);
+        middleCharIndices.push(lineLen / 2);
+      }
+
+      let firstLineChars = [];
+      let lastLineChars = [];
+      let centerChars = [];
+      
+      let allFirstLetters = [];
+      let allLastLetters = [];
+
+      allLines.forEach((lineArr, lIdx) => {
+        const div = document.createElement('div');
+        div.className = 'line';
+        
+        let isFirstLine = (lIdx === 0);
+        let isLastLine = (lIdx === totalLines - 1);
+        let isMidLine = middleLineIndices.includes(lIdx);
+        
+        allFirstLetters.push(lineArr[0]);
+        allLastLetters.push(lineArr[lineLen - 1]);
+        
+        lineArr.forEach((char, cIdx) => {
+          let isFirstChar = (cIdx === 0);
+          let isLastChar = (cIdx === lineLen - 1);
+          let isMidChar = middleCharIndices.includes(cIdx);
+          
+          let shouldExtract = false;
+
+          if (isFirstLine && (isFirstChar || isLastChar)) {
+            shouldExtract = true;
+            firstLineChars.push(char); 
+          }
+          else if (isLastLine && (isFirstChar || isLastChar)) {
+            shouldExtract = true;
+            lastLineChars.push(char); 
+          }
+          else if (isMidLine && isMidChar) {
+            shouldExtract = true;
+            centerChars.push(char); 
+          }
+
+          const span = document.createElement('span');
+          if (shouldExtract) span.className = 'highlight'; 
+          span.textContent = char;
+          div.appendChild(span);
+        });
+        
+        output.appendChild(div);
+      });
+
+      let finalExtractedChars = [...firstLineChars, ...lastLineChars, ...centerChars];
+      let joinedChars = finalExtractedChars.join('');
+      let muwakkil1 = joinedChars + "ھیث";
+      let muwakkil2 = joinedChars + "ائیل";
+
+      extractionDiv.innerHTML = `
+        <div class="card abjad-card">
+          <span class="card-title title-purple">اعداد و میزان</span>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-label">اعدادِ ابجد</span>
+              <div class="stat-value">${abjadSum}</div>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">سطریں</span>
+              <div class="stat-value">${totalLines}</div>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">میزان</span>
+              <div class="stat-value">${meezan}</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card extract-card">
+          <span class="card-title title-blue">تمام سطروں کے پہلے حروف</span>
+          <div class="letters-display-small">${allFirstLetters.join(' ')}</div>
+        </div>
+        
+        <div class="card extract-card">
+          <span class="card-title title-blue">تمام سطروں کے آخری حروف</span>
+          <div class="letters-display-small">${allLastLetters.join(' ')}</div>
+        </div>
+
+        <div class="card extract-card">
+          <span class="card-title title-blue">مستخرجہ حروف (خاص)</span>
+          <div class="letters-display">${finalExtractedChars.join(' ')}</div>
+        </div>
+        
+        <div class="card muwakkil-card">
+          <span class="card-title title-green">اسماءِ موکلین</span>
+          <div class="muwakkil-name">${muwakkil1}</div>
+          <div class="muwakkil-name">${muwakkil2}</div>
+        </div>
+      `;
+
+      takseerWrapper.style.display = 'block';
+    };
+
+    document.getElementById('clear').onclick = () => {
+      document.getElementById('name').value='';
+      document.getElementById('output').innerHTML='';
+      document.getElementById('extractionResult').innerHTML='';
+      document.getElementById('takseerWrapper').style.display = 'none';
+    };
+  </script>
+</body>  
+</html>
