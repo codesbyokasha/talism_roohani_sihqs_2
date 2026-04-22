@@ -27,6 +27,10 @@
       --blue-light: #e1f5fe;
       --text-main: #333333;
       --danger: #d32f2f;
+      
+      /* Dynamic Variables for User Controls */
+      --fl-word-spacing: 8px;
+      --fl-line-height: 2.2;
     }
 
     * {
@@ -38,7 +42,7 @@
     body { 
       /* Applied custom font first, fallbacks after */
       font-family: "PDMS Saleem", "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", "Segoe UI", Arial, sans-serif; 
-      font-size: 22px; /* Increased base font size for Nastaliq */
+      font-size: 28px; /* Greatly increased base font size for Nastaliq */
       background-color: var(--bg-color); 
       color: var(--text-main);
       display: flex;
@@ -49,11 +53,11 @@
 
     .container {
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
     }
 
     h1 { 
-      font-size: clamp(28px, 8vw, 36px); /* Increased heading size */
+      font-size: clamp(34px, 10vw, 44px); /* Larger Heading */
       text-align: center;
       color: var(--primary-dark);
       margin-bottom: 20px;
@@ -72,8 +76,8 @@
 
     textarea { 
       width: 100%; 
-      min-height: 100px; 
-      font-size: clamp(22px, 6vw, 28px); /* Increased textarea font size */
+      min-height: 120px; 
+      font-size: clamp(28px, 8vw, 36px); /* Much larger textarea font */
       direction: rtl; 
       padding: 12px; 
       border-radius: 12px;
@@ -99,7 +103,7 @@
       border-radius: 12px;
       border: 1px solid #ccc;
       font-family: inherit;
-      font-size: clamp(20px, 5vw, 24px); /* Increased select box font size */
+      font-size: clamp(24px, 6vw, 28px); /* Larger dropdown */
       background: #fafafa;
       direction: rtl;
       outline: none;
@@ -120,7 +124,7 @@
     button { 
       flex: 1;
       padding: 14px 10px; 
-      font-size: clamp(20px, 5vw, 24px); /* Increased button font size */
+      font-size: clamp(24px, 6vw, 28px); /* Larger buttons */
       font-weight: bold;
       cursor: pointer; 
       border: none; 
@@ -150,9 +154,10 @@
     .extract-card { border-top: 4px solid var(--primary); background: var(--blue-light); }
     .muwakkil-card { border-top: 4px solid var(--green); background: var(--green-light); }
     .naqsh-card { border-top: 4px solid #e65100; background: #fff3e0; } 
+    .settings-card { border-top: 4px solid #455a64; background: #eceff1; }
 
     .card-title {
-      font-size: 24px; /* Increased card title size */
+      font-size: 28px; /* Larger title */
       font-weight: bold;
       margin-bottom: 10px;
       display: block;
@@ -164,6 +169,7 @@
     .title-blue { color: var(--primary-dark); }
     .title-green { color: var(--green); }
     .title-orange { color: #e65100; }
+    .title-grey { color: #37474f; }
 
     /* Stats Grid */
     .stats-grid {
@@ -181,7 +187,7 @@
     }
 
     .stat-label {
-      font-size: 18px; /* Increased label size */
+      font-size: 20px; 
       color: #666;
       display: block;
       margin-bottom: 5px;
@@ -189,15 +195,15 @@
     }
 
     .stat-value {
-      font-size: 28px;
+      font-size: 32px; /* Bigger English numbers */
       color: var(--purple);
       font-weight: bold;
-      font-family: "Montserrat", monospace; /* Kept English numbers clean */
+      font-family: "Montserrat", monospace; 
     }
 
-    /* Letters Display (Fixed for Nastaliq) */
+    /* Letters Display */
     .letters-display {
-      font-size: clamp(30px, 8vw, 36px); /* Increased specific letters display */
+      font-size: clamp(34px, 9vw, 44px); 
       word-spacing: 12px;
       color: var(--danger);
       font-weight: bold;
@@ -206,24 +212,25 @@
       overflow-wrap: break-word;
     }
 
+    /* The target element controlled by user variables */
     .letters-display-small {
-      font-size: clamp(26px, 7vw, 32px); /* Increased specific letters display */
-      word-spacing: 8px;
+      font-size: clamp(30px, 8vw, 40px); 
+      word-spacing: var(--fl-word-spacing); /* Handled dynamically */
+      line-height: var(--fl-line-height);   /* Handled dynamically */
       color: var(--primary-dark);
       font-weight: bold;
-      line-height: 2.2;
       text-align: center;
       overflow-wrap: break-word;
     }
 
     .muwakkil-name {
-      font-size: clamp(28px, 7vw, 34px); /* Increased Muwakkil names */
+      font-size: clamp(32px, 8vw, 42px);
       color: var(--danger);
       font-weight: bold;
       text-align: center;
       margin: 8px 0;
       background: #fff;
-      padding: 8px;
+      padding: 10px;
       border-radius: 8px;
       border: 1px solid rgba(46, 125, 50, 0.2);
     }
@@ -241,7 +248,7 @@
       border: 1px solid #ffb74d;
       text-align: center;
       padding: 12px;
-      font-size: clamp(22px, 6vw, 26px);
+      font-size: clamp(26px, 7vw, 32px);
       font-family: "Montserrat", sans-serif; 
       font-weight: 700;
       color: #424242;
@@ -250,7 +257,7 @@
     .validation-msg {
       text-align: center;
       margin-top: 12px;
-      font-size: 18px; /* Increased validation msg size */
+      font-size: 20px; 
       font-weight: bold;
       padding: 8px;
       border-radius: 8px;
@@ -278,9 +285,9 @@
       background: #fff;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
-      padding: 10px 14px; /* Increased padding */
+      padding: 10px 14px;
       margin: 4px 0;
-      font-size: clamp(26px, 7vw, 32px); /* Increased Takseer line text size */
+      font-size: clamp(30px, 8vw, 38px);
       display: flex;
       justify-content: center;
       gap: 6px;
@@ -290,13 +297,35 @@
 
     .line span {
       display: inline-block;
-      min-width: 26px; /* Increased width to prevent clipping */
+      min-width: 28px;
       text-align: center;
     }
 
     .highlight {
       color: var(--danger);
       font-weight: bold;
+    }
+
+    /* Slider Controls Styling */
+    .slider-group {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      direction: rtl;
+    }
+    .slider-group label {
+      font-size: 20px;
+      font-weight: bold;
+      color: #37474f;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-family: Arial, sans-serif; /* Readable for numbers */
+    }
+    .slider-group input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary-dark);
+      cursor: pointer;
     }
 
   </style>
@@ -330,6 +359,18 @@
       </div>
     </div>
 
+    <div class="card settings-card" id="formattingControls" style="display:none;">
+      <span class="card-title title-grey">پہلے اور آخری حروف کی سیٹنگز</span>
+      <div class="slider-group">
+        <label><span>الفاظ کا درمیانی فاصلہ (Word Spacing):</span> <span id="wsVal">8px</span></label>
+        <input type="range" id="wordSpacingInput" min="0" max="60" value="8" dir="ltr">
+      </div>
+      <div class="slider-group">
+        <label><span>لائنوں کا درمیانی فاصلہ (Line Height):</span> <span id="lhVal">2.2</span></label>
+        <input type="range" id="lineHeightInput" min="1" max="5" step="0.1" value="2.2" dir="ltr">
+      </div>
+    </div>
+
     <div id="extractionResult"></div>
     
     <div class="takseer-wrapper" id="takseerWrapper" style="display:none;">
@@ -338,6 +379,25 @@
   </div>
 
   <script>
+    // --- Manual Formatting Controls Logic ---
+    const wsInput = document.getElementById('wordSpacingInput');
+    const lhInput = document.getElementById('lineHeightInput');
+    const wsValDisplay = document.getElementById('wsVal');
+    const lhValDisplay = document.getElementById('lhVal');
+
+    wsInput.addEventListener('input', (e) => {
+      const val = e.target.value + 'px';
+      document.documentElement.style.setProperty('--fl-word-spacing', val);
+      wsValDisplay.textContent = val;
+    });
+
+    lhInput.addEventListener('input', (e) => {
+      const val = e.target.value;
+      document.documentElement.style.setProperty('--fl-line-height', val);
+      lhValDisplay.textContent = val;
+    });
+    // ----------------------------------------
+
     const abjadMap = {
         'ا':1,'أ':1,'إ':1,'آ':1,'ء':1,'ٱ':1,'ٰ':1,
         'ب':2,'پ':2, 'ج':3,'چ':3, 'د':4,'ڈ':4,
@@ -504,10 +564,12 @@
       const output = document.getElementById('output');
       const extractionDiv = document.getElementById('extractionResult');
       const takseerWrapper = document.getElementById('takseerWrapper');
+      const formatControls = document.getElementById('formattingControls');
       
       output.innerHTML = '';
       extractionDiv.innerHTML = '';
       takseerWrapper.style.display = 'none';
+      formatControls.style.display = 'none';
 
       if(!rawText) return;
 
@@ -662,6 +724,7 @@
       `;
 
       takseerWrapper.style.display = 'block';
+      formatControls.style.display = 'block'; // Show sliders
     };
 
     document.getElementById('clear').onclick = () => {
@@ -669,6 +732,7 @@
       document.getElementById('output').innerHTML='';
       document.getElementById('extractionResult').innerHTML='';
       document.getElementById('takseerWrapper').style.display = 'none';
+      document.getElementById('formattingControls').style.display = 'none';
     };
   </script>
 </body>  
