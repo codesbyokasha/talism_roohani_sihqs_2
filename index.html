@@ -9,13 +9,15 @@
   
   <style>
     /* آپ کے لوکل نستعلیق فونٹ کو شامل کرنے کا طریقہ */
+/* Updated Custom Font Declaration */
     @font-face {
       font-family: 'MyNastaleeq';
-      src: url('fonts/nastaleeq.ttf') format('truetype');
+      src: url('./fonts/nastaleeq.ttf') format('truetype'); /* Added ./ for explicit relative path */
       font-weight: normal;
       font-style: normal;
+      font-display: swap; /* Helps with loading performance */
     }
-
+    
     :root {
       --bg-color: #f0f2f5;
       --card-bg: #ffffff;
