@@ -4,8 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>تکسیر جفر، استخراج و نقش</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  
   <style>
+    /* آپ کے لوکل نستعلیق فونٹ کو شامل کرنے کا طریقہ */
+    @font-face {
+      font-family: 'MyNastaleeq';
+      src: url('fonts/nastaleeq.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     :root {
       --bg-color: #f0f2f5;
       --card-bg: #ffffff;
@@ -27,7 +37,8 @@
     }
 
     body { 
-      font-family: "Noto Nastaliq Urdu", "Noto Naskh Arabic", "Segoe UI", sans-serif; 
+      /* یہاں MyNastaleeq کو پرائمری فونٹ سیٹ کر دیا گیا ہے */
+      font-family: 'MyNastaleeq', "Segoe UI", Arial, sans-serif; 
       background-color: var(--bg-color); 
       color: var(--text-main);
       display: flex;
@@ -171,13 +182,14 @@
       color: #666;
       display: block;
       margin-bottom: 5px;
+      font-family: 'MyNastaleeq', sans-serif;
     }
 
     .stat-value {
       font-size: 24px;
       color: var(--purple);
       font-weight: bold;
-      font-family: "Courier New", monospace;
+      font-family: "Montserrat", monospace; 
     }
 
     /* Letters Display */
@@ -192,7 +204,7 @@
     }
 
     .letters-display-small {
-      font-size: clamp(18px, 5vw, 22px); 
+      font-size: clamp(20px, 5vw, 24px); 
       letter-spacing: 2px;
       color: var(--primary-dark);
       font-weight: bold;
@@ -225,17 +237,23 @@
     .naqsh-table td {
       border: 1px solid #ffb74d;
       text-align: center;
-      padding: 8px;
-      font-size: clamp(16px, 4vw, 20px);
-      font-family: "Courier New", monospace;
-      font-weight: bold;
+      padding: 12px;
+      font-size: clamp(18px, 5vw, 22px);
+      font-family: "Montserrat", sans-serif; 
+      font-weight: 700;
       color: #424242;
     }
 
-    .naqsh-table .sum {
-      background: #ffe0b2;
-      color: #e65100;
+    .validation-msg {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      padding: 8px;
+      border-radius: 8px;
     }
+    .valid { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .invalid { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
 
     /* Takseer Scrollable Area */
     .takseer-wrapper {
@@ -317,7 +335,6 @@
   </div>
 
   <script>
-    // ابجد میپ
     const abjadMap = {
         'ا':1,'أ':1,'إ':1,'آ':1,'ء':1,'ٱ':1,'ٰ':1,
         'ب':2,'پ':2, 'ج':3,'چ':3, 'د':4,'ڈ':4,
@@ -334,7 +351,6 @@
         'ـ':0, '\u200C':0, '\u200D':0
     };
 
-    // مربع کے لے آؤٹس
     const layouts_murabba = {
       aatshi: [8,11,14,1, 13,2,7,12, 3,16,9,6, 10,5,4,15],
       baadi:  [11,8,1,14, 2,13,12,7, 16,3,6,9, 5,10,15,4],
@@ -349,7 +365,6 @@
       khaaki: [null,13,10,7, 11,6,1,12, 5,8,15,2, 14,3,4,9]
     };
 
-    // مثلث کے لے آؤٹس
     const layouts_musallas = {
       aatshi: [8,1,6, 3,5,7, 4,9,2],
       baadi:  [2,7,6, 9,5,1, 4,3,8],
@@ -357,7 +372,27 @@
       khaaki: [4,9,2, 3,5,7, 8,1,6]
     };
 
-    // مربع بنانے کا فنکشن (4x4)
+    function chunkLetters(arr) {
+      let L = arr.length;
+      if (L <= 6) return [arr.join('')];
+      
+      let min_N = Math.ceil(L / 6);
+      let max_N = Math.floor(L / 4);
+      let N = (min_N <= max_N) ? max_N : (Math.round(L / 4) || 1);
+      
+      let baseSize = Math.floor(L / N);
+      let remainder = L % N;
+      let result = [];
+      let idx = 0;
+      
+      for (let i = 0; i < N; i++) {
+        let currentSize = baseSize + (i < remainder ? 1 : 0);
+        result.push(arr.slice(idx, idx + currentSize).join(''));
+        idx += currentSize;
+      }
+      return result;
+    }
+
     function buildMurabbaNaqsh(type, meezan){
       let grid = Array(16).fill('');
       if(meezan <= 33){
@@ -383,7 +418,6 @@
       return grid;
     }
 
-    // مثلث بنانے کا فنکشن (3x3)
     function buildMusallasNaqsh(type, meezan){
       let grid = Array(9).fill('');
       let modified = meezan - 12;
@@ -393,11 +427,9 @@
       let nums = [];
       for(let i=0; i<9; i++) nums.push(quotient + i);
       
-      // اگر کسر 1 بچے تو خانہ 7 سے 9 تک ایک کا اضافہ
       if(remainder === 1){
         for(let i=6; i<9; i++) nums[i] += 1; 
       }
-      // اگر کسر 2 بچے تو خانہ 4 سے 9 تک ایک کا اضافہ
       else if(remainder === 2){
         for(let i=3; i<9; i++) nums[i] += 1; 
       }
@@ -409,15 +441,18 @@
       return grid;
     }
 
-    // نقش ڈرا کرنے کا ڈائنامک فنکشن (خود بخود 3x3 یا 4x4 ڈرا کرے گا)
     function renderNaqshCard(title, grid, meezanVal){
-      let n = Math.sqrt(grid.length); // اگر Array میں 9 ہیں تو 3، 16 ہیں تو 4
+      let n = Math.sqrt(grid.length);
       let rows = [];
       for(let i=0; i<n; i++) rows.push(grid.slice(i*n, i*n + n));
       
       let rowSums = rows.map(r=>r.reduce((a,b)=>a+(+b||0),0));
       let colSums = Array(n).fill(0);
       for(let r=0; r<n; r++) for(let c=0; c<n; c++) colSums[c]+= (+rows[r][c]||0);
+
+      let isValid = true;
+      for(let sum of rowSums) { if(sum !== meezanVal) isValid = false; }
+      for(let sum of colSums) { if(sum !== meezanVal) isValid = false; }
 
       let html = `<div class="card naqsh-card">
         <span class="card-title title-orange">نقش (${title}) - میزان: ${meezanVal}</span>
@@ -428,15 +463,16 @@
         for(let j=0; j<n; j++){
           html+=`<td>${rows[i][j]||''}</td>`;
         }
-        html+=`<td class="sum">${rowSums[i]}</td></tr>`;
+        html+="</tr>";
       }
+      html+="</table>";
       
-      html+="<tr>";
-      for(let j=0; j<n; j++){
-        html+=`<td class="sum">${colSums[j]}</td>`;
+      if (isValid) {
+        html += `<div class="validation-msg valid">✅ نقش کی جانچ: بالکل درست بھرا گیا ہے۔</div>`;
+      } else {
+        html += `<div class="validation-msg invalid">❌ نقش کی جانچ: قواعد کے مطابق درست نہیں بھرا گیا۔</div>`;
       }
-      html+=`<td class="sum" style="background:transparent; border:none;"></td></tr>`;
-      html+="</table></div>";
+      html += `</div>`;
       return html;
     }
 
@@ -571,7 +607,6 @@
       let selectedValue = naqshSelection.value; 
       let naqshTitle = naqshSelection.options[naqshSelection.selectedIndex].text;
       
-      // پتہ لگانا کہ مربع ہے یا مثلث
       let [sizeType, element] = selectedValue.split('_'); 
       let naqshHtml = "";
 
@@ -604,14 +639,16 @@
           </div>
         </div>
 
-        ${naqshHtml} <div class="card extract-card">
+        ${naqshHtml} 
+        
+        <div class="card extract-card">
           <span class="card-title title-blue">تمام سطروں کے پہلے حروف</span>
-          <div class="letters-display-small">${allFirstLetters.join(' ')}</div>
+          <div class="letters-display-small">${chunkLetters(allFirstLetters).join(' ')}</div>
         </div>
         
         <div class="card extract-card">
           <span class="card-title title-blue">تمام سطروں کے آخری حروف</span>
-          <div class="letters-display-small">${allLastLetters.join(' ')}</div>
+          <div class="letters-display-small">${chunkLetters(allLastLetters).join(' ')}</div>
         </div>
 
         <div class="card extract-card">
