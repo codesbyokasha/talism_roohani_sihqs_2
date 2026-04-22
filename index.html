@@ -38,6 +38,7 @@
     body { 
       /* Applied custom font first, fallbacks after */
       font-family: "PDMS Saleem", "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", "Segoe UI", Arial, sans-serif; 
+      font-size: 22px; /* Increased base font size for Nastaliq */
       background-color: var(--bg-color); 
       color: var(--text-main);
       display: flex;
@@ -52,11 +53,12 @@
     }
 
     h1 { 
-      font-size: clamp(20px, 6vw, 28px); 
+      font-size: clamp(28px, 8vw, 36px); /* Increased heading size */
       text-align: center;
       color: var(--primary-dark);
       margin-bottom: 20px;
       text-shadow: 0px 1px 2px rgba(0,0,0,0.1);
+      line-height: 1.6;
     }
 
     /* Input Section */
@@ -70,8 +72,8 @@
 
     textarea { 
       width: 100%; 
-      min-height: 80px; 
-      font-size: clamp(16px, 5vw, 22px); 
+      min-height: 100px; 
+      font-size: clamp(22px, 6vw, 28px); /* Increased textarea font size */
       direction: rtl; 
       padding: 12px; 
       border-radius: 12px;
@@ -81,6 +83,7 @@
       resize: vertical;
       outline: none;
       transition: border 0.3s;
+      line-height: 1.8;
     }
 
     textarea:focus {
@@ -96,7 +99,7 @@
       border-radius: 12px;
       border: 1px solid #ccc;
       font-family: inherit;
-      font-size: clamp(14px, 4vw, 18px);
+      font-size: clamp(20px, 5vw, 24px); /* Increased select box font size */
       background: #fafafa;
       direction: rtl;
       outline: none;
@@ -117,7 +120,7 @@
     button { 
       flex: 1;
       padding: 14px 10px; 
-      font-size: clamp(14px, 4vw, 18px); 
+      font-size: clamp(20px, 5vw, 24px); /* Increased button font size */
       font-weight: bold;
       cursor: pointer; 
       border: none; 
@@ -149,12 +152,12 @@
     .naqsh-card { border-top: 4px solid #e65100; background: #fff3e0; } 
 
     .card-title {
-      font-size: 16px;
+      font-size: 24px; /* Increased card title size */
       font-weight: bold;
       margin-bottom: 10px;
       display: block;
       text-align: center;
-      font-family: "PDMS Saleem", inherit;
+      font-family: inherit;
     }
 
     .title-purple { color: var(--purple); }
@@ -178,7 +181,7 @@
     }
 
     .stat-label {
-      font-size: 13px;
+      font-size: 18px; /* Increased label size */
       color: #666;
       display: block;
       margin-bottom: 5px;
@@ -186,16 +189,16 @@
     }
 
     .stat-value {
-      font-size: 24px;
+      font-size: 28px;
       color: var(--purple);
       font-weight: bold;
-      font-family: "Montserrat", monospace; 
+      font-family: "Montserrat", monospace; /* Kept English numbers clean */
     }
 
     /* Letters Display (Fixed for Nastaliq) */
     .letters-display {
-      font-size: clamp(20px, 6vw, 26px);
-      word-spacing: 8px;
+      font-size: clamp(30px, 8vw, 36px); /* Increased specific letters display */
+      word-spacing: 12px;
       color: var(--danger);
       font-weight: bold;
       line-height: 2.2;
@@ -204,8 +207,8 @@
     }
 
     .letters-display-small {
-      font-size: clamp(20px, 5vw, 24px); 
-      word-spacing: 5px;
+      font-size: clamp(26px, 7vw, 32px); /* Increased specific letters display */
+      word-spacing: 8px;
       color: var(--primary-dark);
       font-weight: bold;
       line-height: 2.2;
@@ -214,7 +217,7 @@
     }
 
     .muwakkil-name {
-      font-size: clamp(22px, 6vw, 26px);
+      font-size: clamp(28px, 7vw, 34px); /* Increased Muwakkil names */
       color: var(--danger);
       font-weight: bold;
       text-align: center;
@@ -238,7 +241,7 @@
       border: 1px solid #ffb74d;
       text-align: center;
       padding: 12px;
-      font-size: clamp(18px, 5vw, 22px);
+      font-size: clamp(22px, 6vw, 26px);
       font-family: "Montserrat", sans-serif; 
       font-weight: 700;
       color: #424242;
@@ -247,7 +250,7 @@
     .validation-msg {
       text-align: center;
       margin-top: 12px;
-      font-size: 15px;
+      font-size: 18px; /* Increased validation msg size */
       font-weight: bold;
       padding: 8px;
       border-radius: 8px;
@@ -275,9 +278,9 @@
       background: #fff;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 10px 14px; /* Increased padding */
       margin: 4px 0;
-      font-size: clamp(16px, 5vw, 22px);
+      font-size: clamp(26px, 7vw, 32px); /* Increased Takseer line text size */
       display: flex;
       justify-content: center;
       gap: 6px;
@@ -287,7 +290,7 @@
 
     .line span {
       display: inline-block;
-      min-width: 22px;
+      min-width: 26px; /* Increased width to prevent clipping */
       text-align: center;
     }
 
