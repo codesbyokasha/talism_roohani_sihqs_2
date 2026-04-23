@@ -40,24 +40,25 @@
     }
 
     body { 
-      /* Applied custom font first, fallbacks after */
       font-family: "PDMS Saleem", "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", "Segoe UI", Arial, sans-serif; 
-      font-size: 28px; /* Greatly increased base font size for Nastaliq */
+      font-size: clamp(20px, 5vw, 28px);
       background-color: var(--bg-color); 
       color: var(--text-main);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 15px 10px;
+      padding: 10px 5px;
+      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
       max-width: 650px;
+      padding: 0 5px;
     }
 
     h1 { 
-      font-size: clamp(34px, 10vw, 44px); /* Larger Heading */
+      font-size: clamp(26px, 8vw, 44px); 
       text-align: center;
       color: var(--primary-dark);
       margin-bottom: 20px;
@@ -68,16 +69,17 @@
     /* Input Section */
     .input-group {
       background: var(--card-bg);
-      padding: 15px;
+      padding: clamp(10px, 3vw, 15px);
       border-radius: 16px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       margin-bottom: 15px;
+      width: 100%;
     }
 
     textarea { 
       width: 100%; 
-      min-height: 120px; 
-      font-size: clamp(28px, 8vw, 36px); /* Much larger textarea font */
+      min-height: 100px; 
+      font-size: clamp(20px, 7vw, 36px); 
       direction: rtl; 
       padding: 12px; 
       border-radius: 12px;
@@ -103,7 +105,7 @@
       border-radius: 12px;
       border: 1px solid #ccc;
       font-family: inherit;
-      font-size: clamp(24px, 6vw, 28px); /* Larger dropdown */
+      font-size: clamp(20px, 6vw, 28px); 
       background: #fafafa;
       direction: rtl;
       outline: none;
@@ -117,14 +119,16 @@
 
     .btn-group {
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
       margin-top: 15px;
     }
 
     button { 
       flex: 1;
-      padding: 14px 10px; 
-      font-size: clamp(24px, 6vw, 28px); /* Larger buttons */
+      min-width: 120px;
+      padding: 12px 10px; 
+      font-size: clamp(20px, 6vw, 28px); 
       font-weight: bold;
       cursor: pointer; 
       border: none; 
@@ -144,10 +148,11 @@
     .card {
       background: var(--card-bg);
       border-radius: 16px;
-      padding: 15px;
+      padding: clamp(10px, 3vw, 15px);
       margin-bottom: 15px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.06);
       width: 100%;
+      overflow: hidden;
     }
 
     .abjad-card { border-top: 4px solid var(--purple); background: var(--purple-light); }
@@ -157,12 +162,13 @@
     .settings-card { border-top: 4px solid #455a64; background: #eceff1; }
 
     .card-title {
-      font-size: 28px; /* Larger title */
+      font-size: clamp(22px, 6vw, 28px);
       font-weight: bold;
       margin-bottom: 10px;
       display: block;
       text-align: center;
       font-family: inherit;
+      word-wrap: break-word;
     }
 
     .title-purple { color: var(--purple); }
@@ -174,8 +180,8 @@
     /* Stats Grid */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      gap: 8px;
       text-align: center;
     }
 
@@ -187,7 +193,7 @@
     }
 
     .stat-label {
-      font-size: 20px; 
+      font-size: clamp(16px, 4.5vw, 20px); 
       color: #666;
       display: block;
       margin-bottom: 5px;
@@ -195,36 +201,39 @@
     }
 
     .stat-value {
-      font-size: 32px; /* Bigger English numbers */
+      font-size: clamp(24px, 7vw, 32px); 
       color: var(--purple);
       font-weight: bold;
       font-family: "Montserrat", monospace; 
+      word-break: break-all;
     }
 
     /* Letters Display */
     .letters-display {
-      font-size: clamp(34px, 9vw, 44px); 
-      word-spacing: 12px;
+      font-size: clamp(26px, 8vw, 44px); 
+      word-spacing: 8px;
       color: var(--danger);
       font-weight: bold;
       line-height: 2.2;
       text-align: center;
       overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     /* The target element controlled by user variables */
     .letters-display-small {
-      font-size: clamp(30px, 8vw, 40px); 
-      word-spacing: var(--fl-word-spacing); /* Handled dynamically */
-      line-height: var(--fl-line-height);   /* Handled dynamically */
+      font-size: clamp(24px, 7vw, 40px); 
+      word-spacing: var(--fl-word-spacing);
+      line-height: var(--fl-line-height); 
       color: var(--primary-dark);
       font-weight: bold;
       text-align: center;
       overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .muwakkil-name {
-      font-size: clamp(32px, 8vw, 42px);
+      font-size: clamp(24px, 7vw, 42px);
       color: var(--danger);
       font-weight: bold;
       text-align: center;
@@ -233,31 +242,42 @@
       padding: 10px;
       border-radius: 8px;
       border: 1px solid rgba(46, 125, 50, 0.2);
+      word-wrap: break-word;
     }
 
     /* Naqsh Table Styling */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 5px;
+    }
+
     .naqsh-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
       background: #fff;
       direction: ltr;
+      table-layout: fixed;
     }
 
     .naqsh-table td {
       border: 1px solid #ffb74d;
       text-align: center;
-      padding: 12px;
-      font-size: clamp(26px, 7vw, 32px);
+      padding: clamp(6px, 2vw, 12px);
+      font-size: clamp(16px, 5.5vw, 32px);
       font-family: "Montserrat", sans-serif; 
       font-weight: 700;
       color: #424242;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .validation-msg {
       text-align: center;
       margin-top: 12px;
-      font-size: 20px; 
+      font-size: clamp(16px, 5vw, 20px); 
       font-weight: bold;
       padding: 8px;
       border-radius: 8px;
@@ -269,7 +289,8 @@
     .takseer-wrapper {
       width: 100%;
       overflow-x: auto; 
-      padding-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 15px;
       margin-top: 20px;
       direction: rtl;
     }
@@ -279,25 +300,26 @@
       flex-direction: column;
       align-items: center;
       min-width: 100%;
+      padding: 0 5px;
     }
 
     .line {
       background: #fff;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
-      padding: 10px 14px;
+      padding: clamp(6px, 2vw, 10px) clamp(8px, 2vw, 14px);
       margin: 4px 0;
-      font-size: clamp(30px, 8vw, 38px);
+      font-size: clamp(20px, 7vw, 38px);
       display: flex;
       justify-content: center;
-      gap: 6px;
+      gap: clamp(3px, 1.5vw, 6px);
       box-shadow: 0 1px 2px rgba(0,0,0,0.05);
       white-space: nowrap; 
     }
 
     .line span {
       display: inline-block;
-      min-width: 28px;
+      min-width: clamp(18px, 4vw, 28px);
       text-align: center;
     }
 
@@ -314,13 +336,13 @@
       direction: rtl;
     }
     .slider-group label {
-      font-size: 20px;
+      font-size: clamp(16px, 5vw, 20px);
       font-weight: bold;
       color: #37474f;
       margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
-      font-family: Arial, sans-serif; /* Readable for numbers */
+      font-family: Arial, sans-serif; 
     }
     .slider-group input[type="range"] {
       width: 100%;
@@ -519,7 +541,8 @@
 
       let html = `<div class="card naqsh-card">
         <span class="card-title title-orange">نقش (${title}) - میزان: ${meezanVal}</span>
-        <table class="naqsh-table">`;
+        <div class="table-responsive">
+          <table class="naqsh-table">`;
       
       for(let i=0; i<n; i++){
         html+="<tr>";
@@ -528,7 +551,7 @@
         }
         html+="</tr>";
       }
-      html+="</table>";
+      html+="</table></div>";
       
       if (isValid) {
         html += `<div class="validation-msg valid">✅ نقش کی جانچ: بالکل درست بھرا گیا ہے۔</div>`;
