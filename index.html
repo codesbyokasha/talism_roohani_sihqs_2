@@ -27,10 +27,6 @@
       --blue-light: #e1f5fe;
       --text-main: #333333;
       --danger: #d32f2f;
-      
-      /* Dynamic Variables for User Controls */
-      --fl-word-spacing: 8px;
-      --fl-line-height: 2.2;
     }
 
     * {
@@ -159,7 +155,6 @@
     .extract-card { border-top: 4px solid var(--primary); background: var(--blue-light); }
     .muwakkil-card { border-top: 4px solid var(--green); background: var(--green-light); }
     .naqsh-card { border-top: 4px solid #e65100; background: #fff3e0; } 
-    .settings-card { border-top: 4px solid #455a64; background: #eceff1; }
 
     .card-title {
       font-size: clamp(22px, 6vw, 28px);
@@ -175,7 +170,6 @@
     .title-blue { color: var(--primary-dark); }
     .title-green { color: var(--green); }
     .title-orange { color: #e65100; }
-    .title-grey { color: #37474f; }
 
     /* Stats Grid */
     .stats-grid {
@@ -220,11 +214,11 @@
       word-break: break-word;
     }
 
-    /* The target element controlled by user variables */
+    /* The target element with newly hardcoded properties */
     .letters-display-small {
       font-size: clamp(24px, 7vw, 40px); 
-      word-spacing: var(--fl-word-spacing);
-      line-height: var(--fl-line-height); 
+      word-spacing: 18px; /* Hardcoded value */
+      line-height: 2.5;   /* Hardcoded value */
       color: var(--primary-dark);
       font-weight: bold;
       text-align: center;
@@ -265,13 +259,11 @@
     .naqsh-table td {
       border: 1px solid #ffb74d;
       text-align: center;
-      padding: clamp(6px, 2vw, 12px);
-      font-size: clamp(16px, 5.5vw, 32px);
+      padding: clamp(4px, 1vw, 8px); /* Reduced padding to help fit larger text dynamically */
       font-family: "Montserrat", sans-serif; 
       font-weight: 700;
       color: #424242;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+      /* Removed fixed font-size and word-wrap to handle them dynamically inline */
     }
 
     .validation-msg {
@@ -327,29 +319,6 @@
       color: var(--danger);
       font-weight: bold;
     }
-
-    /* Slider Controls Styling */
-    .slider-group {
-      margin-top: 15px;
-      display: flex;
-      flex-direction: column;
-      direction: rtl;
-    }
-    .slider-group label {
-      font-size: clamp(16px, 5vw, 20px);
-      font-weight: bold;
-      color: #37474f;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      font-family: Arial, sans-serif; 
-    }
-    .slider-group input[type="range"] {
-      width: 100%;
-      accent-color: var(--primary-dark);
-      cursor: pointer;
-    }
-
   </style>
 </head>
 <body>
@@ -381,18 +350,6 @@
       </div>
     </div>
 
-    <div class="card settings-card" id="formattingControls" style="display:none;">
-      <span class="card-title title-grey">کلمات کو شو کرنے کی سیٹنگ</span>
-      <div class="slider-group">
-        <label><span>الفاظ کا درمیانی فاصلہ (Word Spacing):</span> <span id="wsVal">8px</span></label>
-        <input type="range" id="wordSpacingInput" min="0" max="60" value="8" dir="ltr">
-      </div>
-      <div class="slider-group">
-        <label><span>لائنوں کا درمیانی فاصلہ (Line Height):</span> <span id="lhVal">2.2</span></label>
-        <input type="range" id="lineHeightInput" min="1" max="5" step="0.1" value="2.2" dir="ltr">
-      </div>
-    </div>
-
     <div id="extractionResult"></div>
     
     <div class="takseer-wrapper" id="takseerWrapper" style="display:none;">
@@ -401,25 +358,6 @@
   </div>
 
   <script>
-    // --- Manual Formatting Controls Logic ---
-    const wsInput = document.getElementById('wordSpacingInput');
-    const lhInput = document.getElementById('lineHeightInput');
-    const wsValDisplay = document.getElementById('wsVal');
-    const lhValDisplay = document.getElementById('lhVal');
-
-    wsInput.addEventListener('input', (e) => {
-      const val = e.target.value + 'px';
-      document.documentElement.style.setProperty('--fl-word-spacing', val);
-      wsValDisplay.textContent = val;
-    });
-
-    lhInput.addEventListener('input', (e) => {
-      const val = e.target.value;
-      document.documentElement.style.setProperty('--fl-line-height', val);
-      lhValDisplay.textContent = val;
-    });
-    // ----------------------------------------
-
     const abjadMap = {
         'ا':1,'أ':1,'إ':1,'آ':1,'ء':1,'ٱ':1,'ٰ':1,
         'ب':2,'پ':2, 'ج':3,'چ':3, 'د':4,'ڈ':4,
@@ -525,6 +463,17 @@
       });
       return grid;
     }
+    
+    // Dynamic Font-Sizing Function to avoid text wrapping for large numbers
+    function getFontSizeForNumber(num) {
+      if (!num && num !== 0) return "clamp(16px, 5.5vw, 32px)";
+      const len = num.toString().length;
+      if (len <= 4) return "clamp(16px, 5.5vw, 32px)";
+      if (len === 5) return "clamp(14px, 4.5vw, 28px)";
+      if (len === 6) return "clamp(12px, 4vw, 24px)";
+      if (len === 7) return "clamp(10px, 3.5vw, 20px)";
+      return "clamp(9px, 3vw, 16px)"; // For 8 digits and above
+    }
 
     function renderNaqshCard(title, grid, meezanVal){
       let n = Math.sqrt(grid.length);
@@ -547,7 +496,9 @@
       for(let i=0; i<n; i++){
         html+="<tr>";
         for(let j=0; j<n; j++){
-          html+=`<td>${rows[i][j]||''}</td>`;
+          let val = rows[i][j] || '';
+          let dynamicFontSize = getFontSizeForNumber(val);
+          html+=`<td style="font-size: ${dynamicFontSize}; white-space: nowrap;">${val}</td>`;
         }
         html+="</tr>";
       }
@@ -587,12 +538,10 @@
       const output = document.getElementById('output');
       const extractionDiv = document.getElementById('extractionResult');
       const takseerWrapper = document.getElementById('takseerWrapper');
-      const formatControls = document.getElementById('formattingControls');
       
       output.innerHTML = '';
       extractionDiv.innerHTML = '';
       takseerWrapper.style.display = 'none';
-      formatControls.style.display = 'none';
 
       if(!rawText) return;
 
@@ -747,7 +696,6 @@
       `;
 
       takseerWrapper.style.display = 'block';
-      formatControls.style.display = 'block'; // Show sliders
     };
 
     document.getElementById('clear').onclick = () => {
@@ -755,7 +703,6 @@
       document.getElementById('output').innerHTML='';
       document.getElementById('extractionResult').innerHTML='';
       document.getElementById('takseerWrapper').style.display = 'none';
-      document.getElementById('formattingControls').style.display = 'none';
     };
   </script>
 </body>  
